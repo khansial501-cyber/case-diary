@@ -6,6 +6,17 @@ import 'package:timezone/data/latest_all.dart' as tzdata;
 import 'package:timezone/timezone.dart' as tz;
 import '../core/providers.dart';
 import '../core/utils.dart';
+   tz.Location _guessLocation() {
+     final off = DateTime.now().timeZoneOffset;
+     for (final n in ['Asia/Karachi', 'Asia/Dubai', 'Asia/Riyadh', 'Europe/London', 'Asia/Kolkata']) {
+       final l = tz.getLocation(n);
+       if (tz.TZDateTime.now(l).timeZoneOffset == off) return l;
+     }
+     for (final l in tz.timeZoneDatabase.locations.values) {
+       if (tz.TZDateTime.now(l).timeZoneOffset == off) return l;
+     }
+     return tz.getLocation('Asia/Karachi');
+   }
 
 /// Low-level wrapper around flutter_local_notifications (initialised in main()).
 class NotificationService {
@@ -15,13 +26,8 @@ class NotificationService {
   bool ready = false;
 
   Future<void> init() async {
-    try {
-      tzdata.initializeTimeZones();
-      final name = await FlutterTimezone.getLocalTimezone();
-      tz.setLocalLocation(tz.getLocation(name));
-    } catch (_) {
-      tz.setLocalLocation(tz.getLocation('Asia/Karachi'));
-    }
+       tzdata.initializeTimeZones();
+       tz.setLocalLocation(_guessLocation());
     await plugin.initialize(const InitializationSettings(android: AndroidInitializationSettings('@mipmap/ic_launcher')));
     final a = plugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
     await a?.createNotificationChannel(const AndroidNotificationChannel('reminders', 'Case reminders',

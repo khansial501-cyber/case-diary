@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -115,17 +114,22 @@ class DocumentsSection extends ConsumerWidget {
   }
 
   Future<void> _scan(BuildContext context, WidgetRef ref) async {
+    final l = ref.read(l10nProvider);
     final cam = await Permission.camera.request();
     if (!cam.isGranted) {
-      if (context.mounted) snack(context, ref.read(l10nProvider)('cameraDenied'));
+      if (context.mounted) snack(context, l('cameraDenied'));
       return;
     }
-    try {
-      final pics = await CunningDocumentScanner.getPictures();
-      if (pics != null && pics.isNotEmpty && context.mounted) await _addFromPaths(context, ref, pics, asPdf: true);
-    } catch (e) {
-      if (context.mounted) snack(context, '$e');
+    final pics = <String>[];
+    while (true) {
+      final x = await ImagePicker().pickImage(source: ImageSource.camera, imageQuality: 85);
+      if (x == null) break;
+      pics.add(x.path);
+      if (!context.mounted) return;
+      final more = await confirm(context, l('addAnotherPage'), yes: l('yes'), no: l('done'));
+      if (!more) break;
     }
+    if (pics.isNotEmpty && context.mounted) await _addFromPaths(context, ref, pics, asPdf: true);
   }
 
   Future<void> _upload(BuildContext context, WidgetRef ref) async {

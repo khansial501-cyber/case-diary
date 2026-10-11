@@ -160,13 +160,6 @@ class SettingsPage extends ConsumerWidget {
             ),
           ),
         ],
-        SwitchListTile(
-          contentPadding: EdgeInsets.zero,
-          title: Text(l('secureScreen')),
-          subtitle: Text(l('secureScreenHelp')),
-          value: s.flag('secureScreen'),
-          onChanged: (v) => n.set('secureScreen', v ? '1' : '0'),
-        ),
 
         SectionTitle(l('notifications')),
         SwitchListTile(

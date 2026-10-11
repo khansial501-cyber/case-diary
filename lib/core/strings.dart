@@ -12,6 +12,7 @@ const Map<String, String> enStrings = {
   'addMoreParties': 'More parties',
   'addParty': 'Add party',
   'addPayment': 'Add payment',
+  'addAnotherPage': 'Add another page?',
   'address': 'Address',
   'agreed': 'Agreed',
   'agreedFee': 'Agreed fee',
@@ -283,6 +284,7 @@ const Map<String, String> enStrings = {
   'weeklyBackupReminder': 'Weekly backup reminder (Sunday)',
   'wrongPin': 'Wrong PIN',
   'year': 'Year',
+  'yes': 'Yes',
   'youRepresent': 'You represent',
 };
 
@@ -299,6 +301,7 @@ const Map<String, String> urStrings = {
   'addMoreParties': 'مزید فریقین',
   'addParty': 'فریق شامل کریں',
   'addPayment': 'ادائیگی شامل کریں',
+  'addAnotherPage': 'کیا ایک اور صفحہ شامل کریں؟',
   'address': 'پتہ',
   'agreed': 'طے شدہ',
   'agreedFee': 'طے شدہ فیس',
@@ -570,5 +573,6 @@ const Map<String, String> urStrings = {
   'weeklyBackupReminder': 'ہفتہ وار بیک اپ یاد دہانی (اتوار)',
   'wrongPin': 'پن غلط ہے',
   'year': 'سال',
+  'yes': 'جی ہاں',
   'youRepresent': 'آپ کس کے وکیل',
 };

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_windowmanager_plus/flutter_windowmanager_plus.dart';
 import '../core/gate.dart';
 import '../core/providers.dart';
 import 'lock_service.dart';
@@ -19,7 +18,6 @@ class AppGuard extends ConsumerStatefulWidget {
 class _AppGuardState extends ConsumerState<AppGuard> with WidgetsBindingObserver {
   DateTime? _pausedAt;
   Timer? _idle, _debounce;
-  bool? _secure;
   bool _booted = false;
 
   @override
@@ -59,18 +57,6 @@ class _AppGuardState extends ConsumerState<AppGuard> with WidgetsBindingObserver
     _idle = Timer(const Duration(minutes: 5), () => ref.read(lockProvider.notifier).lockNow());
   }
 
-  Future<void> _applySecure(bool on) async {
-    if (_secure == on) return;
-    _secure = on;
-    try {
-      if (on) {
-        await FlutterWindowManagerPlus.addFlags(FlutterWindowManagerPlus.FLAG_SECURE);
-      } else {
-        await FlutterWindowManagerPlus.clearFlags(FlutterWindowManagerPlus.FLAG_SECURE);
-      }
-    } catch (_) {}
-  }
-
   @override
   Widget build(BuildContext context) {
     ref.watch(dataVersionProvider); // makes sure the repo change hook is installed
@@ -86,7 +72,6 @@ class _AppGuardState extends ConsumerState<AppGuard> with WidgetsBindingObserver
         ref.read(notificationServiceProvider).rescheduleAll();
       }
     });
-    _applySecure(ref.watch(settingsProvider.select((s) => s.flag('secureScreen', false))));
     return Listener(
       behavior: HitTestBehavior.translucent,
       onPointerDown: (_) => _resetIdle(),
